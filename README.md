@@ -18,6 +18,7 @@ A simple PHP wrapper for the Pushover API.
 ## Usage
 
 You can interact with the API either by making GET or POST requests.
+Replace "your-usage-token" with your actual usage token, "Hello World" with your actual message, and https://your-domain.com with the actual URL.
 
 ### Minimal Parameters
 
@@ -35,7 +36,11 @@ Using cURL with POST:
 curl -X POST -d "message=Hello World" "https://your-domain.com?usageToken=your-usage-token"
 ```
 
-Replace "your-usage-token" with your actual usage token, "Hello World" with your actual message, and https://your-domain.com with the actual URL.
+### Retrieve all parameters and all sounds
+
+```bash
+curl -X GET "https://your-domain.com?usageToken=your-usage-token"
+```
 
 List of All Possible Parameters
 - `message`: Your message
