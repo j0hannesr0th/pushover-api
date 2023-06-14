@@ -9,7 +9,7 @@ A simple PHP wrapper for the Pushover API.
 ```json
 {
     "usageToken": "your-usage-token",
-    "api_url": "https://api.pushover.net/1/messages.json",
+    "apiUrl": "https://api.pushover.net/1/messages.json",
     "token": "your-pushover-app-token",
     "user": "your-pushover-user-key"
 }
