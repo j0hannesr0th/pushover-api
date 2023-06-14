@@ -53,3 +53,8 @@ List of All Possible Parameters
 - `sound`: The name of one of the sounds supported by device clients to override the user's default sound choice. Retrieve the list of all possible sound values by making a GET request without action parameter.
 
 See the official documentation for more details: https://pushover.net/api
+
+
+## Security Warning
+
+This implementation allows for sending notifications via GET requests for the sake of demonstration. However, using GET for operations that change the state of your system (like sending a notification) is not recommended because it can expose sensitive data and allow for potential replay attacks. Please use POST requests for these kinds of operations in a production environment.
