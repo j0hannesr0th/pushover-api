@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 require_once '../src/Pushover.php';
 
 $configJson = file_get_contents('../config.json');
+
 if ($configJson === false) {
     // Error handling when the file cannot be read
     http_response_code(500);
@@ -12,6 +14,7 @@ if ($configJson === false) {
 }
 
 $config = json_decode($configJson);
+
 if ($config === null) {
     // Error handling when the JSON cannot be decoded
     http_response_code(500);
