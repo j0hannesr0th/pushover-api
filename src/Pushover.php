@@ -11,6 +11,10 @@ class Pushover
         $this->config = $config;
     }
 
+    /**
+     * @param array<string, string> $params
+     * @return string
+     */
     public function sendNotification(array $params): string
     {
         $params = array_merge((array)$this->config, $params);
@@ -26,9 +30,12 @@ class Pushover
 
         curl_close($ch);
 
-        return $response ?: '';
+        return $response !== false ? (string)$response : '';
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getParameters(): array
     {
         $soundOptions = $this->getSoundOptions();
@@ -50,22 +57,30 @@ class Pushover
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     private function getSoundOptions(): array
     {
-        $url = $this->apiUrl . '/sounds.json?token=' . $this->config->token;
+        if (!empty($this->config->token)) {
+            $url = $this->apiUrl . '/sounds.json?token=' . $this->config->token;
 
-        $ch = curl_init();
+            $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $response = curl_exec($ch);
+            $response = curl_exec($ch);
 
-        curl_close($ch);
+            curl_close($ch);
 
-        if ($response) {
-            $responseData = json_decode($response, true);
-            return array_keys($responseData['sounds']);
+            if ($response && is_string($response)) {
+                $responseData = json_decode($response, true);
+
+                /** @var string[] $soundNames */
+                $soundNames = array_keys($responseData['sounds']);
+                return $soundNames;
+            }
         }
 
         return [];

@@ -1,9 +1,23 @@
 <?php
 declare(strict_types=1);
 
-require_once '../Pushover.php';
+require_once '../src/Pushover.php';
 
-$config = json_decode(file_get_contents('../config.json'));
+$configJson = file_get_contents('../config.json');
+if ($configJson === false) {
+    // Error handling when the file cannot be read
+    http_response_code(500);
+    echo json_encode(['error' => 'Failed to read configuration file']);
+    exit;
+}
+
+$config = json_decode($configJson);
+if ($config === null) {
+    // Error handling when the JSON cannot be decoded
+    http_response_code(500);
+    echo json_encode(['error' => 'Failed to parse configuration JSON']);
+    exit;
+}
 
 $pushover = new Pushover($config);
 
