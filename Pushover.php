@@ -4,6 +4,7 @@ declare(strict_types=1);
 class Pushover
 {
     protected object $config;
+    private string $apiUrl = 'https://api.pushover.net/1/';
 
     public function __construct(object $config)
     {
@@ -12,11 +13,11 @@ class Pushover
 
     public function sendNotification(array $params): string
     {
-        $params = array_merge((array) $this->config, $params);
+        $params = array_merge((array)$this->config, $params);
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $this->config->apiUrl);
+        curl_setopt($ch, CURLOPT_URL, $this->apiUrl . 'messages.json');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -51,7 +52,7 @@ class Pushover
 
     private function getSoundOptions(): array
     {
-        $url = "https://api.pushover.net/1/sounds.json?token={$this->config->token}";
+        $url = $this->apiUrl . '/sounds.json?token=' . $this->config->token;
 
         $ch = curl_init();
 
