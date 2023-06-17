@@ -1,5 +1,6 @@
 {
   "user": "your-user-key-here",
   "token": "your-api-token-here",
-  "usageToken": "random-token-for-this-api"
+  "usageToken": "random-token-for-this-api",
+  "logging": true
 }

@@ -5,7 +5,8 @@ declare(strict_types=1);
 class Pushover
 {
     protected object $config;
-    private string $apiUrl = 'https://api.pushover.net/1/';
+    private string $apiUrl  = 'https://api.pushover.net/1/';
+    private string $logFile = '../requests.log';
 
     public function __construct(object $config)
     {
@@ -30,6 +31,10 @@ class Pushover
         $response = curl_exec($ch);
 
         curl_close($ch);
+
+        if (isset($this->config->logging) && $this->config->logging) {
+            $this->logRequest($params, $response);
+        }
 
         return $response !== false ? (string) $response : '';
     }
@@ -82,5 +87,31 @@ class Pushover
         }
 
         return [];
+    }
+
+    /**
+     * Logs the request parameters and response to the log file.
+     *
+     * @param array<string, mixed> $params
+     * @param string|bool $response
+     */
+    private function logRequest(array $params, $response): void
+    {
+        $keysToUnset = ['usageToken', 'user', 'token', 'logging'];
+
+        foreach ($keysToUnset as $keyToUnset) {
+            unset($params[$keyToUnset]);
+        }
+
+        $logData = [
+            'timestamp' => date('Y-m-d H:i:s'),
+            'ip'        => $_SERVER['REMOTE_ADDR'], // Access the client's IP address
+            'params'    => $params,
+            'response'  => $response,
+        ];
+
+        $logLine = json_encode($logData, JSON_UNESCAPED_UNICODE) . PHP_EOL;
+
+        file_put_contents($this->logFile, $logLine, FILE_APPEND | LOCK_EX) !== false;
     }
 }
