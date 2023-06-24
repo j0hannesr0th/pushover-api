@@ -65,7 +65,7 @@ class Pushover
     private function getSoundOptions(): array
     {
         if (!empty($this->config->token)) {
-            $url = $this->apiUrl . '/sounds.json?token=' . $this->config->token;
+            $url = $this->apiUrl . 'sounds.json?token=' . $this->config->token;
 
             $ch = curl_init();
 
@@ -93,9 +93,9 @@ class Pushover
      * Logs the request parameters and response to the log file.
      *
      * @param array<string, mixed> $params
-     * @param string|bool $response
+     * @param bool|string $response
      */
-    private function logRequest(array $params, $response): void
+    private function logRequest(array $params, bool|string $response): void
     {
         $keysToUnset = ['usageToken', 'user', 'token', 'logging'];
 

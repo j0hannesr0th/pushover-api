@@ -2,5 +2,11 @@
   "user": "your-user-key-here",
   "token": "your-api-token-here",
   "usageToken": "random-token-for-this-api",
-  "logging": true
+  "logging": true,
+  "preparedActions": {
+    "your-name-of-action": {
+      "sound": "alien",
+      "message": "This message will be sent."
+    }
+  }
 }

@@ -7,7 +7,6 @@ require_once '../src/Pushover.php';
 $configJson = file_get_contents('../config.json');
 
 if ($configJson === false) {
-    // Error handling when the file cannot be read
     http_response_code(500);
     echo json_encode(['error' => 'Failed to read configuration file']);
     exit;
@@ -16,7 +15,6 @@ if ($configJson === false) {
 $config = json_decode($configJson);
 
 if ($config === null) {
-    // Error handling when the JSON cannot be decoded
     http_response_code(500);
     echo json_encode(['error' => 'Failed to parse configuration JSON']);
     exit;
@@ -34,9 +32,20 @@ if ($usageToken !== $config->usageToken) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' || (isset($_GET['action']) && $_GET['action'] === 'send')) {
-    $data = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : $_GET;
-    unset($data['usageToken'], $data['action']);
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' ||
+    isset($_GET['preparedAction']) && isset($config->preparedActions) && array_key_exists($_GET['preparedAction'], (array) $config->preparedActions) ||
+    isset($_GET['sendViaGet'])
+) {
+    $data = [];
+
+    if (isset($_GET['preparedAction']) && isset($config->preparedActions)) {
+        $data = (array) $config->preparedActions->{$_GET['preparedAction']};
+    } elseif (isset($_GET['sendViaGet']) || $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_POST : $_GET;
+        unset($data['usageToken']);
+    }
+
     echo $pushover->sendNotification($data);
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode($pushover->getParameters());

@@ -54,6 +54,15 @@ List of All Possible Parameters
 
 See the official documentation for more details: https://pushover.net/api
 
+### Prepared actions
+
+It's possible to add prepared actions to your config. On client side you only have to send the preparedAction parameter.
+
+Using cURL with GET and prepared action:
+
+```bash
+curl -X GET 'https://your-domain.com?usageToken=your-usage-token&preparedAction=your-preparedAction-key'
+```
 
 ## Security Warning
 
